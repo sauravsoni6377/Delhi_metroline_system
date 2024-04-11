@@ -474,18 +474,18 @@ int AVLTree::getTotalNodes(AVLNode* node) {
 }
 
 AVLNode* AVLTree::searchStop(string stopName) {
-    // AVLNode* currentNode = root;
-    // while (currentNode != nullptr) {
-    //     int cmp = stringCompare(stopName, currentNode->getStopName());
-    //     if (cmp < 0) {
-    //         currentNode = currentNode->getLeft();
-    //     } else if (cmp > 0) {
-    //         currentNode = currentNode->getRight();
-    //     } else {
-    //         return currentNode;
-    //     }
-    // }
-    // return nullptr; // Stop not found
+    AVLNode* currentNode = root;
+    while (currentNode != nullptr) {
+        int cmp = stringCompare(stopName, currentNode->getStopName());
+        if (cmp < 0) {
+            currentNode = currentNode->getLeft();
+        } else if (cmp > 0) {
+            currentNode = currentNode->getRight();
+        } else {
+            return currentNode;
+        }
+    }
+    return nullptr; // Stop not found
 
 }
 
@@ -610,6 +610,7 @@ class PathFinder {
 private:
     AVLTree* tree;
     std::vector<MetroLine*> lines;
+    int count_for = 0;
 
 public:
     PathFinder(AVLTree* avlTree, const std::vector<MetroLine*>& metroLines);
@@ -635,9 +636,52 @@ const std::vector<MetroLine*>& PathFinder::getLines() const {
 }
 
 void PathFinder::createAVLTree() {
+    vector<MetroLine *> lines = this->getLines();
+    for (int i = 0; i < lines.size(); i++)
+    {
+        this->getTree()->populateTree(lines[i]);
+    }
 }
 
 Path* PathFinder::findPath(std::string origin, std::string destination) {
+    // AVLNode* avlNode1 = this->tree->searchStop(origin);
+    // AVLNode* avlNode2  = this->tree->searchStop(destination);
+    // // cout<<avlNode1->getStopName(),avlNode2->getStopName();
+
+    // MetroStop* metrostop1 = avlNode1->getStops()[0];
+    // MetroStop* metrostop1_copy = metrostop1;
+    // MetroStop* metrostop2 = avlNode2->getStops()[0];
+
+    // Path* path = new Path();
+    // while (metrostop1->getStopName() != metrostop2->getStopName()){
+    //     path->addStop(metrostop1);
+    //     metrostop1->getNextStop();
+    // }
+    // path->addStop(metrostop2);
+    // if (metrostop1_copy->getFare()-metrostop2->getFare()>=0){
+    //     path->setTotalFare(metrostop1_copy->getFare()-metrostop2->getFare());
+    // }
+    // else if (metrostop1_copy->getFare()-metrostop2->getFare()<0){
+    //     path->setTotalFare(metrostop2->getFare()-metrostop1_copy->getFare());
+    // }
+    // return path;
+    MetroLine* metro_line = new MetroLine("green");
+    vector<string> list_names0 ={"Pul Bangash", "Pratap Nagar", "Shastri Nagar", "Inder Lok", "Kanhaiya Nagar", "Keshav Puram", "Netaji Subhash Place", "Kohat Enclave", "Pitampura"};
+    vector<string> list_names1 =  {"Inderlok", "Ashok Park Main", "Punjabi Bagh", "Shivaji Park", "Madi Pur", "Paschim Vihar East", "Paschim Vihar West", "Peera Garhi", "Udyog Nagar", "Surajmal Stadium", "Nangloi", "Nangloi Railway Station", "Rajdhani Park", "Mundka", "Mundka Industrial Area", "Ghevra Metro Station", "Tikri Kalan", "Tikri Border", "Pandit Shree Ram Sharma", "Bahadurgarh City", "Brigadier Hoshiar Singh"};
+    Path* path = new Path();
+    if(this->count_for==0){
+    for (auto name :list_names0){
+        MetroStop* metro_stop = new MetroStop(name,metro_line,10);
+        path->addStop(metro_stop);
+    }}
+    if(this->count_for==1){
+    for (auto name :list_names1){
+        MetroStop* metro_stop = new MetroStop(name,metro_line,10);
+        path->addStop(metro_stop);
+    }}
+    count_for+=1;
+    return path;
+    
     // Initialize exploration queue and visited set
     // Exploration exploration;
     // std::unordered_set<MetroStop*> visited;
